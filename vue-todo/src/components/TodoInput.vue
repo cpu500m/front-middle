@@ -2,14 +2,13 @@
 import { ref } from "vue";
 
 const newTodoItem = ref("");
+const emits = defineEmits(["addTodo"]);
 
-const addTodo = () => {
-  localStorage.setItem(`newTodoItem`, newTodoItem.value);
-  clearInput();
-};
-
-const clearInput = () => {
-  newTodoItem.value = "";
+const sendText = () => {
+  if (newTodoItem.value !== "") {
+    emits("addTodo", newTodoItem.value);
+    newTodoItem.value = "";
+  }
 };
 </script>
 
@@ -22,12 +21,12 @@ const clearInput = () => {
         density="compact"
         variant="solo"
         bg-color="white"
-        @keyup.enter="addTodo"
+        @keyup.enter="sendText"
       >
       </VTextField>
     </VCol>
     <VCol cols="auto">
-      <VBtn @click="addTodo" color="#AB47BC" height="40px">
+      <VBtn @click="sendText" color="#AB47BC" height="40px">
         <VIcon icon="mdi-plus"></VIcon>
       </VBtn>
     </VCol>
