@@ -26,7 +26,7 @@ const addTodo = (newTodoItem: string) => {
   todoItems.value.push(newObj);
 };
 
-const removeTodo = (target: string, index: number) => {
+const removeTodo = (target: TodoItem, index: number) => {
   localStorage.removeItem(target.item);
   todoItems.value.splice(index, 1);
 };

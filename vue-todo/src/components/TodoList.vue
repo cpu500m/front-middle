@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { TodoItem } from "@/types/type";
 
 const todoItems = defineModel("todoItems");
 const emit = defineEmits(["removeTodo"]);
 
-const toggleComplete = (target: todoItem) => {
+const toggleComplete = (target: TodoItem) => {
   target.completed = !target.completed;
   localStorage.setItem(target.item, JSON.stringify(target));
 };

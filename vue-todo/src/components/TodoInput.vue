@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import InputDialog from "@/components/common/InputDialog.vue";
 
 const newTodoItem = ref("");
 const emits = defineEmits(["addTodo"]);
+
+const alertFlag = ref<boolean>(false);
 
 const sendText = () => {
   if (newTodoItem.value !== "") {
     emits("addTodo", newTodoItem.value);
     newTodoItem.value = "";
+  } else {
+    console.log(alertFlag.value);
+    alertFlag.value = true;
   }
 };
 </script>
@@ -31,6 +37,7 @@ const sendText = () => {
       </VBtn>
     </VCol>
   </VRow>
+  <InputDialog v-model="alertFlag"></InputDialog>
 </template>
 
 <style scoped></style>
