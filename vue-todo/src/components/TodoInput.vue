@@ -14,38 +14,24 @@ const clearInput = () => {
 </script>
 
 <template>
-  <div class="inputBox shadow">
-    <input type="text" v-model="newTodoItem" />
-    <!-- <button @click="addTodo">add</button> -->
-    <span class="addContainer" @click="addTodo">
-      <i class="fa-plus addBtn"></i>
-    </span>
-  </div>
+  <VRow no-gutters justify="center">
+    <VCol cols="3">
+      <VTextField
+        v-model="newTodoItem"
+        clearable
+        density="compact"
+        variant="solo"
+        bg-color="white"
+        @keyup.enter="addTodo"
+      >
+      </VTextField>
+    </VCol>
+    <VCol cols="auto">
+      <VBtn @click="addTodo" color="#AB47BC" height="40px">
+        <VIcon icon="mdi-plus"></VIcon>
+      </VBtn>
+    </VCol>
+  </VRow>
 </template>
 
-<style scoped>
-input:focus {
-  outline: none;
-}
-.inputBox {
-  background: while;
-  height: 50px;
-  line-height: 50px;
-  border-radius: 5px;
-}
-.inputBox input {
-  border-style: none;
-  font-size: 0.9rem;
-}
-.addContainer {
-  float: right;
-  background: linear-gradient(to right, #647bfb, #8763fb);
-  display: block;
-  width: 3rem;
-  border-radius: 0 5px 5px 0;
-}
-.addBtn {
-  color: white;
-  vertical-align: middle;
-}
-</style>
+<style scoped></style>
