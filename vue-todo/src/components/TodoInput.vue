@@ -12,7 +12,6 @@ const sendText = () => {
     emits("addTodo", newTodoItem.value);
     newTodoItem.value = "";
   } else {
-    console.log(alertFlag.value);
     alertFlag.value = true;
   }
 };
