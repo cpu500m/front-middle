@@ -1,8 +1,23 @@
 <script setup lang="ts">
 import { TodoItem } from "@/types/type";
+import { ComputedRef, ModelRef, computed } from "vue";
 
-const todoItems = defineModel("todoItems");
+const todoItems: ModelRef<TodoItem[]> = defineModel("todoItems", {
+  default: [] as TodoItem[],
+});
 const emit = defineEmits(["removeTodo"]);
+
+const completedTasks: ComputedRef<number> = computed(() => {
+  return todoItems.value.filter((task) => task.completed).length;
+});
+
+const progress: ComputedRef<number> = computed(() => {
+  return (completedTasks.value / todoItems.value.length) * 100;
+});
+
+const remainingTasks: ComputedRef<number> = computed(() => {
+  return todoItems.value.length - completedTasks.value;
+});
 
 const toggleComplete = (target: TodoItem) => {
   target.completed = !target.completed;
@@ -13,24 +28,48 @@ const toggleComplete = (target: TodoItem) => {
 <template>
   <VRow justify="center">
     <VCol cols="5">
+      <VRow align="center" class="my-1">
+        <strong class="mx-4 text-info-darken-2">
+          Remaining: {{ remainingTasks }}
+        </strong>
+
+        <strong class="mx-4 text-success-darken-2">
+          Completed: {{ completedTasks }}
+        </strong>
+
+        <VSpacer></VSpacer>
+
+        <VProgressCircular
+          v-model="progress"
+          class="me-4"
+          color="#AB47BC"
+        ></VProgressCircular>
+      </VRow>
       <VList bg-color="#D1C4E9" base-color="#311B92">
-        <VListItem v-for="(todoItem, index) in todoItems" :index="index">
-          <span :class="{ textCompleted: todoItem.completed }">
-            {{ todoItem.item }}
-          </span>
-          <template #prepend>
-            <VCheckboxBtn
-              v-model="todoItem.completed"
-              @click="toggleComplete(todoItem)"
-              :disabled="todoItem.completed"
-            ></VCheckboxBtn>
-          </template>
-          <template #append>
-            <VBtn color="#311B92" @click="emit('removeTodo', todoItem, index)">
-              <VIcon icon="mdi-delete"></VIcon>
-            </VBtn>
-          </template>
-        </VListItem>
+        <template v-for="(todoItem, index) in todoItems">
+          <Transition name="list">
+            <VListItem>
+              <div :class="{ textCompleted: todoItem.completed }">
+                {{ todoItem.item }}
+              </div>
+              <template #prepend>
+                <VCheckboxBtn
+                  v-model="todoItem.completed"
+                  @click="toggleComplete(todoItem)"
+                  :disabled="todoItem.completed"
+                ></VCheckboxBtn>
+              </template>
+              <template #append>
+                <VBtn
+                  color="#311B92"
+                  @click="emit('removeTodo', todoItem, index)"
+                >
+                  <VIcon icon="mdi-delete"></VIcon>
+                </VBtn>
+              </template>
+            </VListItem>
+          </Transition>
+        </template>
       </VList>
     </VCol>
   </VRow>
@@ -40,5 +79,15 @@ const toggleComplete = (target: TodoItem) => {
 .textCompleted {
   text-decoration: line-through;
   color: #b3adad;
+}
+
+.list-transition-enter-active,
+.list-transition-leave-active {
+  transition: transform 0.5s;
+}
+.list-transition-enter,
+.list-transition-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>

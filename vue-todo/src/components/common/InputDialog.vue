@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ModelRef } from "vue";
+
 const isActive: boolean = defineModel();
 </script>
 
