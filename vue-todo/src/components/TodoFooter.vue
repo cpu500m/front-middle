@@ -1,5 +1,8 @@
 <script setup lang="ts">
-const emit = defineEmits(["clearTodo"]);
+import { useTodoStore } from "@/stores/TodoStore";
+
+const todoStore = useTodoStore();
+const { clearTodo } = todoStore;
 </script>
 
 <template>
@@ -8,7 +11,7 @@ const emit = defineEmits(["clearTodo"]);
     <VCol>
       <VBtn
         class="clear-all me-4"
-        @click="emit(`clearTodo`)"
+        @click="clearTodo()"
         prepend-icon="mdi-delete"
         >모두 지우기
       </VBtn>

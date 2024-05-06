@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import InputDialog from "@/components/common/InputDialog.vue";
+import { useTodoStore } from "@/stores/TodoStore";
+
+/* pinia store */
+const todoStore = useTodoStore();
+const { addTodo } = todoStore;
 
 const newTodoItem = ref("");
-const emits = defineEmits(["addTodo"]);
-
 const alertFlag = ref<boolean>(false);
 
 const sendText = () => {
   if (newTodoItem.value !== "") {
-    emits("addTodo", newTodoItem.value);
+    addTodo(newTodoItem.value);
     newTodoItem.value = "";
   } else {
     alertFlag.value = true;

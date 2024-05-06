@@ -1,29 +1,19 @@
 <script setup lang="ts">
+import { useTodoStore } from "@/stores/TodoStore";
 import { TodoItem } from "@/types/type";
-import { ComputedRef, ModelRef, computed } from "vue";
+import { storeToRefs } from "pinia";
 
-const todoItems: ModelRef<TodoItem[]> = defineModel("todoItems", {
-  default: [] as TodoItem[],
-});
-const emit = defineEmits(["removeTodo"]);
-
-/* for progress bar */
-const completedTasks: ComputedRef<number> = computed(() => {
-  return todoItems.value.filter((task) => task.completed).length;
-});
-
-const progress: ComputedRef<number> = computed(() => {
-  return (completedTasks.value / todoItems.value.length) * 100;
-});
-
-const remainingTasks: ComputedRef<number> = computed(() => {
-  return todoItems.value.length - completedTasks.value;
-});
+const TodoStore = useTodoStore();
+const { remainingTasks, completedTasks, progress } = storeToRefs(TodoStore);
+const { removeTodo, initTodo } = TodoStore;
+const { todoItems } = storeToRefs(TodoStore);
 
 const toggleComplete = (target: TodoItem) => {
   target.completed = !target.completed;
   localStorage.setItem(target.item, JSON.stringify(target));
 };
+
+initTodo();
 </script>
 
 <template>
@@ -61,10 +51,7 @@ const toggleComplete = (target: TodoItem) => {
                 ></VCheckboxBtn>
               </template>
               <template #append>
-                <VBtn
-                  color="#311B92"
-                  @click="emit('removeTodo', todoItem, index)"
-                >
+                <VBtn color="#311B92" @click="removeTodo(todoItem, index)">
                   <VIcon icon="mdi-delete"></VIcon>
                 </VBtn>
               </template>
