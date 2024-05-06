@@ -7,6 +7,7 @@ const todoItems: ModelRef<TodoItem[]> = defineModel("todoItems", {
 });
 const emit = defineEmits(["removeTodo"]);
 
+/* for progress bar */
 const completedTasks: ComputedRef<number> = computed(() => {
   return todoItems.value.filter((task) => task.completed).length;
 });
@@ -45,9 +46,9 @@ const toggleComplete = (target: TodoItem) => {
           color="#AB47BC"
         ></VProgressCircular>
       </VRow>
-      <VList bg-color="#D1C4E9" base-color="#311B92">
-        <template v-for="(todoItem, index) in todoItems">
-          <Transition name="list">
+      <VList bg-color="#D1C4E9" base-color="#311B92" class="overflow-hidden">
+        <TransitionGroup name="list">
+          <template v-for="(todoItem, index) in todoItems" :key="index">
             <VListItem>
               <div :class="{ textCompleted: todoItem.completed }">
                 {{ todoItem.item }}
@@ -68,8 +69,8 @@ const toggleComplete = (target: TodoItem) => {
                 </VBtn>
               </template>
             </VListItem>
-          </Transition>
-        </template>
+          </template>
+        </TransitionGroup>
       </VList>
     </VCol>
   </VRow>
@@ -81,13 +82,12 @@ const toggleComplete = (target: TodoItem) => {
   color: #b3adad;
 }
 
-.list-transition-enter-active,
-.list-transition-leave-active {
-  transition: transform 0.5s;
+.list-enter-active {
+  transition: all 0.5s ease;
 }
-.list-transition-enter,
-.list-transition-leave-to {
-  transform: translateX(20px);
+
+.list-enter-from {
   opacity: 0;
+  transform: translateY(30px);
 }
 </style>
